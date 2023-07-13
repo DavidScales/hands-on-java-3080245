@@ -1,5 +1,8 @@
 package bank;
 
+import bank.exceptions.AmountException;
+import bank.exceptions.InsufficientFundsException;
+
 public class Account {
 
   private int id;
@@ -34,6 +37,28 @@ public class Account {
 
   public void setBalance(double balance) {
     this.balance = balance;
+  }
+
+  public void deposit(double amount) throws AmountException {
+    if (amount < 1) {
+      throw new AmountException("The minimum deposit is 1");
+    } else {
+      double newBalance = balance + amount;
+      setBalance(newBalance);
+      DataSource.updateAccountBalance(id, balance);
+    }
+  }
+
+  public void withdrawl(double amount) throws AmountException, InsufficientFundsException {
+    if (amount < 1) {
+      throw new AmountException("The minimum withdrawl is 1");
+    } else if (amount > balance) {
+      throw new InsufficientFundsException("You dont have that kind of money my guy");
+    } else {
+      double newBalance = balance - amount;
+      setBalance(newBalance);
+      DataSource.updateAccountBalance(id, balance);
+    }
   }
 
 }

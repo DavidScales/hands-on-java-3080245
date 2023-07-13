@@ -44,6 +44,22 @@ public class DataSource {
     return account;
   }
 
+  public static void updateAccountBalance(int accountId, double balance) {
+    String sql = "update accounts set balance = ? where id = ?";
+    try (
+        Connection connection = connect();
+        PreparedStatement statement = connection.prepareStatement(sql);) {
+      statement.setDouble(1, balance);
+      statement.setInt(2, accountId);
+
+      statement.executeUpdate();
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+  }
+
   public static Customer getCustomer(String username) {
     Customer customer = null;
     String sql = "select * from customers where username = ?";
@@ -68,21 +84,21 @@ public class DataSource {
     return customer;
   }
 
-  public static void main(String[] args) {
-    Customer customer = getCustomer("twest8o@friendfeed.com");
-    if (customer != null) {
-      String customerName = customer.getName();
-      int accountId = customer.getAccountId();
-      System.out.println(customerName);
-      Account account = getAccount(accountId);
-      if (account != null) {
-        System.out.printf("Balance: %f%n", account.getBalance());
-      } else {
-        System.out.println("Customer has no account");
-      }
-    } else {
-      System.out.println("Could not find customer");
-    }
+  // public static void main(String[] args) {
+  // Customer customer = getCustomer("twest8o@friendfeed.com");
+  // if (customer != null) {
+  // String customerName = customer.getName();
+  // int accountId = customer.getAccountId();
+  // System.out.println(customerName);
+  // Account account = getAccount(accountId);
+  // if (account != null) {
+  // System.out.printf("Balance: %f%n", account.getBalance());
+  // } else {
+  // System.out.println("Customer has no account");
+  // }
+  // } else {
+  // System.out.println("Could not find customer");
+  // }
 
-  }
+  // }
 }
